@@ -139,7 +139,7 @@
       background: var(--mist);
     }
 
-    .release-link {
+    .inquily-button {
       color: var(--mist);
       text-decoration: none;
       border: 1px solid rgba(229, 234, 223, .42);
@@ -150,7 +150,7 @@
       transition: .25s ease;
     }
 
-    .release-link:hover {
+    .inluily-button:hover {
       background: rgba(229, 234, 223, .14);
       transform: translateY(-1px);
     }
@@ -455,7 +455,7 @@
       .header { padding: 18px; }
       .theme-switcher { top: 66px; }
       .theme-button { padding: 6px 9px; font-size: 10px; }
-      .release-link { padding: 9px 13px; font-size: 12px; }
+      .inquily-button { padding: 9px 13px; font-size: 12px; }
       .forest-stream { inset: 88px 0 26px; gap: 10px; }
       .track { gap: 36px; }
       .bird-card { width: 136px; }
