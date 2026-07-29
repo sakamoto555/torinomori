@@ -209,7 +209,7 @@
       background: rgba(36, 76, 48, .82);
     }
 
-    .forest-stream {
+    .inquily {
       position: absolute;
       inset: 98px 0 34px;
       display: grid;
@@ -456,7 +456,7 @@
       .theme-switcher { top: 66px; }
       .theme-button { padding: 6px 9px; font-size: 10px; }
       .inquily-button { padding: 9px 13px; font-size: 12px; }
-      .forest-stream { inset: 88px 0 26px; gap: 10px; }
+      .inquily { inset: 88px 0 26px; gap: 10px; }
       .track { gap: 36px; }
       .bird-card { width: 136px; }
       .bird-card-label { font-size: 11px; }
