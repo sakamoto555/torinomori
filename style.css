@@ -471,3 +471,199 @@
       .track { animation-play-state: paused; }
       * { scroll-behavior: auto !important; }
     }
+
+/* 中央の2つの操作ボタンだけを横並びにします。 */
+.intro-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.release-button {
+  background: rgba(247, 250, 240, .90);
+  color: var(--ink);
+  border-color: rgba(247, 250, 240, .78);
+}
+
+.release-button:hover {
+  background: var(--mist);
+}
+
+/* 仮の投稿画面。既存の詳細画面と同じく、ページの手前に重ねます。 */
+.release-modal {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(2, 9, 5, .62);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .26s ease;
+}
+
+.release-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.release-panel {
+  position: relative;
+  width: min(760px, 94vw);
+  max-height: min(88vh, 760px);
+  overflow-y: auto;
+  padding: 46px 48px 42px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 28px 90px rgba(0,0,0,.48);
+  transform: translateY(18px) scale(.98);
+  transition: transform .28s ease;
+}
+
+.release-modal.open .release-panel {
+  transform: translateY(0) scale(1);
+}
+
+.release-panel h2 {
+  margin: 12px 0 8px;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 500;
+  letter-spacing: .08em;
+}
+
+.release-lead {
+  margin: 0 0 28px;
+  color: #687662;
+  line-height: 1.8;
+  font-size: 13px;
+}
+
+.release-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 20px;
+}
+
+.release-field {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: #5f6d5a;
+}
+
+.release-field-wide,
+.release-image-field,
+.release-form-actions,
+.release-message {
+  grid-column: 1 / -1;
+}
+
+.release-field input,
+.release-field textarea {
+  width: 100%;
+  border: 1px solid rgba(23, 49, 29, .18);
+  border-radius: 0;
+  padding: 12px 13px;
+  background: rgba(255,255,255,.62);
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+}
+
+.release-field input:focus,
+.release-field textarea:focus {
+  border-color: rgba(23, 49, 29, .48);
+  box-shadow: 0 0 0 3px rgba(49, 95, 60, .08);
+}
+
+.release-image-field input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.release-image-preview {
+  min-height: 150px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(23, 49, 29, .28);
+  background: rgba(255,255,255,.36);
+  color: #72806d;
+  cursor: pointer;
+  background-position: center;
+  background-size: cover;
+}
+
+.release-image-preview.has-image {
+  color: transparent;
+  min-height: 230px;
+}
+
+.release-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.release-cancel-button,
+.release-submit-button {
+  border-radius: 999px;
+  padding: 12px 20px;
+  cursor: pointer;
+  letter-spacing: .1em;
+}
+
+.release-cancel-button {
+  border: 1px solid rgba(23, 49, 29, .22);
+  color: var(--ink);
+  background: transparent;
+}
+
+.release-submit-button {
+  border: 1px solid var(--forest-0);
+  color: var(--mist);
+  background: var(--forest-0);
+}
+
+.release-message {
+  min-height: 1.6em;
+  margin: 0;
+  text-align: right;
+  font-size: 12px;
+  color: #5f6d5a;
+}
+
+@media (max-width: 720px) {
+  .intro-actions {
+    gap: 8px;
+  }
+
+  .encounter-button {
+    padding: 13px 16px;
+    font-size: 12px;
+    letter-spacing: .08em;
+  }
+
+  .release-panel {
+    padding: 42px 24px 30px;
+  }
+
+  .release-form {
+    grid-template-columns: 1fr;
+  }
+
+  .release-field-wide,
+  .release-image-field,
+  .release-form-actions,
+  .release-message {
+    grid-column: auto;
+  }
+}
