@@ -34,10 +34,9 @@ const creatures = [
   }
 ];
 
-const stream = document.getElementById("inquily");
+const stream = document.getElementById("forestStream");
 const detail = document.getElementById("detail");
 const encounterButton = document.getElementById("encounterButton");
-const releaceButton = document.getElementById("releaceButton");
 const closeButton = document.getElementById("closeButton");
 const themeButtons = [...document.querySelectorAll(".theme-button")];
 
@@ -74,7 +73,7 @@ function makeEmptyCard() {
 
   const circle = document.createElement("div");
   circle.className = "empty-circle";
-  circle.textContent = "";
+  circle.textContent = "まだ、森に気配はありません";
 
   const spacer = document.createElement("span");
   spacer.className = "bird-card-label";
