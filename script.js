@@ -1,9 +1,9 @@
 const creatures = [
   {
     id: "crab",
-    name: "森のカニ",
+    name: "カニちゃん",
     author: "テスト投稿",
-    location: "いのだキャンプ場",
+    location: "B区画",
     date: "撮影日未設定",
     species: "カニの仲間",
     comment: "草の奥で、こちらの様子をうかがっていました。",
@@ -73,7 +73,7 @@ function makeEmptyCard() {
 
   const circle = document.createElement("div");
   circle.className = "empty-circle";
-  circle.textContent = "まだ、森に気配はありません";
+  circle.textContent = "";
 
   const spacer = document.createElement("span");
   spacer.className = "bird-card-label";
