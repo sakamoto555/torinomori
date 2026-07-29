@@ -95,24 +95,16 @@ function buildRow(rowIndex, creature) {
     (rowIndex === 1 ? " reverse" : "") +
     (rowIndex === 2 ? " slow" : "");
 
-  /*
-    1列につき実画像は1種類だけ。
-    画像の間を十分な空白で離すため、
-    画面内で同じ画像が並びにくい構成です。
+  const slotCount = 8;
+  const creaturePosition = Math.floor(Math.random() * slotCount);
 
-    無限スクロールの継ぎ目用に列全体は複製しますが、
-    複製同士は遠く離れています。
-  */
-  const unit = [
-    makeEmptyCard(),
-    makeEmptyCard(),
-    creature ? makeCreatureCard(creature) : makeEmptyCard(),
-    makeEmptyCard(),
-    makeEmptyCard(),
-    makeEmptyCard(),
-    makeEmptyCard(),
-    makeEmptyCard()
-  ];
+  const unit = Array.from({ length: slotCount }, (_, index) => {
+    if (creature && index === creaturePosition) {
+      return makeCreatureCard(creature);
+    }
+
+    return makeEmptyCard();
+  });
 
   const cloneUnit = unit.map((node) => {
     if (node.classList.contains("empty")) {
@@ -125,6 +117,14 @@ function buildRow(rowIndex, creature) {
   [...unit, ...cloneUnit].forEach((node) => {
     track.appendChild(node);
   });
+
+  const animationDuration =
+    rowIndex === 0 ? 38 :
+    rowIndex === 1 ? 44 :
+    54;
+
+  track.style.animationDelay =
+    `-${Math.random() * animationDuration}s`;
 
   wrap.appendChild(track);
 
