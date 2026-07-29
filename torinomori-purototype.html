@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鳥の森</title>
+  <style>
+    :root {
+      --forest-0: #07130d;
+      --forest-1: #0d2418;
+      --forest-2: #183d27;
+      --moss: #8eaa72;
+      --mist: #e5eadf;
+      --paper: rgba(239, 242, 229, 0.94);
+      --ink: #142117;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--forest-0);
+      color: var(--mist);
+      font-family:
+        "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP",
+        serif;
+      overflow: hidden;
+    }
+
+    button { font: inherit; }
+
+    .site {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(189, 216, 153, .14), transparent 22%),
+        radial-gradient(circle at 80% 26%, rgba(219, 238, 189, .08), transparent 20%),
+        linear-gradient(160deg, var(--forest-1), var(--forest-0) 58%, #030a06);
+    }
+
+    .site::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          92deg,
+          transparent 0 78px,
+          rgba(11, 37, 22, .22) 79px 83px,
+          transparent 84px 140px
+        );
+      opacity: .45;
+      mix-blend-mode: screen;
+    }
+
+    .header {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 34px;
+      background: linear-gradient(to bottom, rgba(5, 15, 9, .82), transparent);
+    }
+
+    .logo {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      letter-spacing: .18em;
+    }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(229, 234, 223, .6);
+      border-radius: 50% 46% 48% 52%;
+      display: grid;
+      place-items: center;
+      transform: rotate(-8deg);
+    }
+
+    .logo-mark::after {
+      content: "鳥";
+      transform: rotate(8deg);
+      font-size: 15px;
+    }
+
+    .release-link {
+      color: var(--mist);
+      text-decoration: none;
+      border: 1px solid rgba(229, 234, 223, .42);
+      border-radius: 999px;
+      padding: 10px 17px;
+      background: rgba(8, 24, 14, .25);
+      backdrop-filter: blur(8px);
+      transition: .25s ease;
+    }
+
+    .release-link:hover {
+      background: rgba(229, 234, 223, .14);
+      transform: translateY(-1px);
+    }
+
+    .intro {
+      position: fixed;
+      z-index: 15;
+      left: 50%;
+      top: 47%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: min(88vw, 620px);
+      pointer-events: none;
+    }
+
+    .intro small {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 12px;
+      letter-spacing: .34em;
+      color: rgba(229, 234, 223, .65);
+    }
+
+    .intro h1 {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 76px);
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-shadow: 0 8px 32px rgba(0,0,0,.34);
+    }
+
+    .intro p {
+      margin: 18px auto 26px;
+      max-width: 520px;
+      line-height: 2;
+      font-size: 14px;
+      color: rgba(229, 234, 223, .78);
+    }
+
+    .encounter-button {
+      pointer-events: auto;
+      border: 1px solid rgba(236, 242, 226, .66);
+      color: #f2f6eb;
+      background: rgba(12, 40, 23, .62);
+      border-radius: 999px;
+      padding: 15px 28px;
+      cursor: pointer;
+      letter-spacing: .16em;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 40px rgba(0,0,0,.28);
+      transition: .25s ease;
+    }
+
+    .encounter-button:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: rgba(36, 76, 48, .82);
+    }
+
+    .forest-stream {
+      position: absolute;
+      inset: 98px 0 34px;
+      display: grid;
+      grid-template-rows: repeat(3, minmax(130px, 1fr));
+      gap: 18px;
+      transform: perspective(1000px) rotateX(2deg);
+      opacity: .72;
+    }
+
+    .track-wrap {
+      position: relative;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+    }
+
+    .track {
+      display: flex;
+      width: max-content;
+      gap: 18px;
+      height: 100%;
+      animation: drift-left 38s linear infinite;
+      will-change: transform;
+    }
+
+    .track.reverse { animation-name: drift-right; animation-duration: 44s; }
+    .track.slow { animation-duration: 54s; }
+
+    @keyframes drift-left {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes drift-right {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+
+    .bird-card {
+      position: relative;
+      width: clamp(150px, 15vw, 240px);
+      height: 100%;
+      min-height: 130px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      border-radius: 4px;
+      background: rgba(224, 234, 214, .05);
+      cursor: pointer;
+      box-shadow: 0 16px 32px rgba(0,0,0,.2);
+      transition: transform .24s ease, opacity .24s ease;
+      flex: 0 0 auto;
+    }
+
+    .bird-card:hover {
+      transform: translateY(-5px) scale(1.015);
+      opacity: 1;
+      z-index: 3;
+    }
+
+    .bird-visual {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 67% 35%, var(--bird-eye, #dfd7b7) 0 5px, transparent 6px),
+        radial-gradient(ellipse at 58% 48%, var(--bird-body, #7e9472) 0 19%, transparent 20%),
+        radial-gradient(ellipse at 48% 56%, var(--bird-wing, #4d6650) 0 25%, transparent 26%),
+        linear-gradient(145deg, var(--sky, #4c6955), var(--ground, #182c1d));
+    }
+
+    .bird-visual::before {
+      content: "";
+      position: absolute;
+      width: 34%;
+      height: 5px;
+      left: 36%;
+      bottom: 22%;
+      border-radius: 99px;
+      background: rgba(48, 36, 24, .72);
+      transform: rotate(-6deg);
+    }
+
+    .bird-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(4,11,6,.42), transparent 55%),
+        radial-gradient(circle at 20% 22%, rgba(238,243,215,.13), transparent 25%);
+    }
+
+    .bird-card span {
+      position: absolute;
+      z-index: 2;
+      left: 13px;
+      bottom: 10px;
+      font-size: 11px;
+      letter-spacing: .12em;
+      color: rgba(247, 250, 240, .9);
+      text-shadow: 0 2px 8px #000;
+    }
+
+    .bird-card.empty {
+      border: 1px dashed rgba(218, 229, 207, .28);
+      background:
+        linear-gradient(135deg, rgba(199, 218, 184, .05), rgba(5, 18, 10, .16));
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .bird-card.empty::before {
+      content: "まだ、鳥はいません";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      color: rgba(229, 234, 223, .38);
+      font-size: 11px;
+      letter-spacing: .14em;
+    }
+
+    .detail {
+      position: fixed;
+      z-index: 40;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(2, 9, 5, .58);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .26s ease;
+    }
+
+    .detail.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .detail-panel {
+      width: min(880px, 94vw);
+      min-height: 470px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 28px 90px rgba(0,0,0,.48);
+      transform: translateY(18px) scale(.98);
+      transition: transform .28s ease;
+    }
+
+    .detail.open .detail-panel {
+      transform: translateY(0) scale(1);
+    }
+
+    .detail-image {
+      min-height: 430px;
+      background:
+        radial-gradient(circle at 68% 34%, #e6d9a8 0 6px, transparent 7px),
+        radial-gradient(ellipse at 58% 48%, var(--bird-body, #7e9472) 0 19%, transparent 20%),
+        radial-gradient(ellipse at 47% 56%, var(--bird-wing, #4d6650) 0 26%, transparent 27%),
+        linear-gradient(145deg, var(--sky, #4c6955), var(--ground, #182c1d));
+    }
+
+    .detail-copy {
+      position: relative;
+      padding: 52px 42px;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(20,33,23,.25);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .detail-kicker {
+      font-size: 11px;
+      letter-spacing: .24em;
+      color: #687662;
+    }
+
+    .detail h2 {
+      margin: 14px 0 22px;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 500;
+      letter-spacing: .08em;
+    }
+
+    .detail dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 11px 16px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .detail dt { color: #75806f; }
+    .detail dd { margin: 0; }
+
+    .detail-comment {
+      margin-top: 30px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(20,33,23,.13);
+      line-height: 2;
+      font-size: 14px;
+    }
+
+    .footer-note {
+      position: fixed;
+      z-index: 15;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 90vw;
+      font-size: 10px;
+      letter-spacing: .16em;
+      color: rgba(229, 234, 223, .46);
+    }
+
+    @media (max-width: 720px) {
+      .header { padding: 18px; }
+      .release-link { padding: 9px 13px; font-size: 12px; }
+      .forest-stream { inset: 88px 0 26px; gap: 10px; }
+      .track { gap: 10px; }
+      .bird-card { width: 142px; }
+      .intro { top: 45%; }
+      .intro p { font-size: 12px; padding: 0 20px; }
+      .detail-panel { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; }
+      .detail-image { min-height: 260px; }
+      .detail-copy { padding: 38px 26px 32px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .track { animation-play-state: paused; }
+      * { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="site">
+    <header class="header">
+      <div class="logo">
+        <div class="logo-mark"></div>
+        <div>鳥の森</div>
+      </div>
+      <a class="release-link" href="#" onclick="alert('投稿ページは次の段階で作成します'); return false;">森に離す</a>
+    </header>
+
+    <section class="forest-stream" id="forestStream" aria-label="森を流れる野鳥の投稿"></section>
+
+    <section class="intro">
+      <small>MEET A BIRD BY CHANCE</small>
+      <h1>鳥の森</h1>
+      <p>
+        誰かが森に離した一羽と、偶然に出会う場所。<br />
+        流れていく気配を追いかけるか、森に選んでもらう。
+      </p>
+      <button class="encounter-button" id="encounterButton">鳥と出会う</button>
+    </section>
+
+    <div class="footer-note">
+      この森は、みんなの投稿によって少しずつ育っていきます。
+    </div>
+  </main>
+
+  <aside class="detail" id="detail" aria-hidden="true">
+    <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="birdName">
+      <div class="detail-image" id="detailImage"></div>
+      <div class="detail-copy">
+        <button class="close-button" id="closeButton" aria-label="閉じる">×</button>
+        <div class="detail-kicker">AN ENCOUNTER IN THE FOREST</div>
+        <h2 id="birdName">リュウキュウアカショウビン</h2>
+        <dl>
+          <dt>投稿者</dt><dd id="author"></dd>
+          <dt>場所</dt><dd id="location"></dd>
+          <dt>日付</dt><dd id="date"></dd>
+          <dt>種類</dt><dd id="species"></dd>
+        </dl>
+        <p class="detail-comment" id="comment"></p>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    const birds = [
+      {
+        name: "リュウキュウアカショウビン",
+        author: "森のひと",
+        location: "石垣島・林道",
+        date: "2026.07.12",
+        species: "ブッポウソウ目 カワセミ科",
+        comment: "雨上がりの木立で、少しだけ姿を見せてくれました。",
+        colors: ["#365a45", "#183321", "#b45337", "#7f2f22"]
+      },
+      {
+        name: "メジロ",
+        author: "sora",
+        location: "住宅地の庭先",
+        date: "2026.07.19",
+        species: "スズメ目 メジロ科",
+        comment: "花の間を忙しそうに移動していました。",
+        colors: ["#6f8b64", "#263d2b", "#aab56f", "#657347"]
+      },
+      {
+        name: "カンムリワシ",
+        author: "nagi",
+        location: "田んぼの近く",
+        date: "2026.07.22",
+        species: "タカ目 タカ科",
+        comment: "遠くの電柱から、静かにこちらを見ていました。",
+        colors: ["#6b7861", "#243128", "#8a7761", "#50473d"]
+      },
+      {
+        name: "シロハラクイナ",
+        author: "匿名",
+        location: "湿地のそば",
+        date: "2026.07.24",
+        species: "ツル目 クイナ科",
+        comment: "草むらを横切った一瞬だけの出会いです。",
+        colors: ["#58705e", "#1d3124", "#a1a59b", "#5b6259"]
+      },
+      {
+        name: "イソヒヨドリ",
+        author: "umi",
+        location: "港の防波堤",
+        date: "2026.07.26",
+        species: "スズメ目 ヒタキ科",
+        comment: "朝の海を背景に、しばらく同じ場所で鳴いていました。",
+        colors: ["#58788c", "#20323b", "#46677b", "#273f4d"]
+      },
+      {
+        name: "ズアカアオバト",
+        author: "mori",
+        location: "森の入口",
+        date: "2026.07.27",
+        species: "ハト目 ハト科",
+        comment: "葉の色にまぎれて、見つけるまで少し時間がかかりました。",
+        colors: ["#5d7959", "#213625", "#82956a", "#536649"]
+      }
+    ];
+
+    const stream = document.getElementById("forestStream");
+    const detail = document.getElementById("detail");
+    const encounterButton = document.getElementById("encounterButton");
+    const closeButton = document.getElementById("closeButton");
+
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function makeBirdCard(bird) {
+      const button = document.createElement("button");
+      button.className = "bird-card";
+      button.setAttribute("aria-label", bird.name + "の詳細を見る");
+      button.style.setProperty("--sky", bird.colors[0]);
+      button.style.setProperty("--ground", bird.colors[1]);
+      button.style.setProperty("--bird-body", bird.colors[2]);
+      button.style.setProperty("--bird-wing", bird.colors[3]);
+      button.innerHTML = `<div class="bird-visual"></div><span>${bird.name}</span>`;
+      button.addEventListener("click", () => openDetail(bird));
+      return button;
+    }
+
+    function makeEmptyCard() {
+      const div = document.createElement("div");
+      div.className = "bird-card empty";
+      div.setAttribute("aria-label", "まだ投稿のない空白");
+      return div;
+    }
+
+    function buildRow(rowIndex) {
+      const wrap = document.createElement("div");
+      wrap.className = "track-wrap";
+
+      const track = document.createElement("div");
+      track.className = "track" + (rowIndex === 1 ? " reverse" : "") + (rowIndex === 2 ? " slow" : "");
+
+      const shuffled = shuffle(birds);
+      const unit = [];
+
+      shuffled.forEach((bird, index) => {
+        unit.push(makeBirdCard(bird));
+        if ((index + rowIndex) % 3 === 1) unit.push(makeEmptyCard());
+      });
+
+      [...unit, ...unit.map(node => node.cloneNode(true))].forEach((node, index) => {
+        if (!node.classList.contains("empty")) {
+          const bird = shuffled[index % shuffled.length];
+          node.addEventListener("click", () => openDetail(bird));
+        }
+        track.appendChild(node);
+      });
+
+      wrap.appendChild(track);
+      return wrap;
+    }
+
+    function openDetail(bird) {
+      document.getElementById("birdName").textContent = bird.name;
+      document.getElementById("author").textContent = bird.author;
+      document.getElementById("location").textContent = bird.location;
+      document.getElementById("date").textContent = bird.date;
+      document.getElementById("species").textContent = bird.species;
+      document.getElementById("comment").textContent = bird.comment;
+
+      const image = document.getElementById("detailImage");
+      image.style.setProperty("--sky", bird.colors[0]);
+      image.style.setProperty("--ground", bird.colors[1]);
+      image.style.setProperty("--bird-body", bird.colors[2]);
+      image.style.setProperty("--bird-wing", bird.colors[3]);
+
+      detail.classList.add("open");
+      detail.setAttribute("aria-hidden", "false");
+    }
+
+    function closeDetail() {
+      detail.classList.remove("open");
+      detail.setAttribute("aria-hidden", "true");
+    }
+
+    for (let i = 0; i < 3; i++) {
+      stream.appendChild(buildRow(i));
+    }
+
+    encounterButton.addEventListener("click", () => {
+      const bird = birds[Math.floor(Math.random() * birds.length)];
+      openDetail(bird);
+    });
+
+    closeButton.addEventListener("click", closeDetail);
+    detail.addEventListener("click", (event) => {
+      if (event.target === detail) closeDetail();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeDetail();
+    });
+  </script>
+</body>
+</html>
