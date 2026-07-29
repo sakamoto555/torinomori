@@ -228,3 +228,72 @@ document.addEventListener("keydown", (event) => {
     closeDetail();
   }
 });
+
+/* =========================================================
+   仮の投稿画面
+   現段階では送信先を持たず、画面表示だけを確認できます。
+   ========================================================= */
+const releaseButton = document.getElementById("releaseButton");
+const releaseModal = document.getElementById("releaseModal");
+const releaseCloseButton = document.getElementById("releaseCloseButton");
+const releaseCancelButton = document.getElementById("releaseCancelButton");
+const releaseForm = document.getElementById("releaseForm");
+const releaseImage = document.getElementById("releaseImage");
+const releaseImagePreview = document.getElementById("releaseImagePreview");
+const releaseMessage = document.getElementById("releaseMessage");
+
+function openReleaseModal() {
+  releaseModal.classList.add("open");
+  releaseModal.setAttribute("aria-hidden", "false");
+  releaseMessage.textContent = "";
+}
+
+function closeReleaseModal() {
+  releaseModal.classList.remove("open");
+  releaseModal.setAttribute("aria-hidden", "true");
+}
+
+releaseButton.addEventListener("click", openReleaseModal);
+releaseCloseButton.addEventListener("click", closeReleaseModal);
+releaseCancelButton.addEventListener("click", closeReleaseModal);
+
+releaseModal.addEventListener("click", (event) => {
+  if (event.target === releaseModal) {
+    closeReleaseModal();
+  }
+});
+
+releaseImagePreview.addEventListener("click", () => {
+  releaseImage.click();
+});
+
+releaseImage.addEventListener("change", () => {
+  const [file] = releaseImage.files;
+
+  if (!file) {
+    releaseImagePreview.style.backgroundImage = "";
+    releaseImagePreview.classList.remove("has-image");
+    releaseImagePreview.textContent = "写真を選択";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    releaseImagePreview.style.backgroundImage = `url("${reader.result}")`;
+    releaseImagePreview.classList.add("has-image");
+    releaseImagePreview.textContent = file.name;
+  });
+  reader.readAsDataURL(file);
+});
+
+releaseForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  releaseMessage.textContent = "仮画面のため、まだ実際には投稿されません。";
+});
+
+/* 既存のEscapeキー処理に加えて、投稿画面も閉じます。 */
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeReleaseModal();
+  }
+});
