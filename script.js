@@ -37,6 +37,7 @@ const creatures = [
 const stream = document.getElementById("forestStream");
 const detail = document.getElementById("detail");
 const encounterButton = document.getElementById("encounterButton");
+const releaceButton = document.getElementById("releaceButton");
 const closeButton = document.getElementById("closeButton");
 const themeButtons = [...document.querySelectorAll(".theme-button")];
 
