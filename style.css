@@ -100,19 +100,7 @@
       transition: opacity .55s ease;
     }
 
-    /* 同じロゴ画像を使い、時間帯ごとに色だけ変える。 */
-    body[data-theme="day"] .logo-mark img {
-      filter: hue-rotate(0deg) saturate(.92) brightness(1.08) contrast(.96);
-    }
-
-    body[data-theme="evening"] .logo-mark img {
-      filter: sepia(.48) hue-rotate(338deg) saturate(.82) brightness(1.03) contrast(.95);
-    }
-
-    body[data-theme="night"] .logo-mark img {
-      filter: sepia(.18) hue-rotate(128deg) saturate(.7) brightness(.8) contrast(1.02);
-    }
-
+  
 
     .theme-switcher {
       position: absolute;
