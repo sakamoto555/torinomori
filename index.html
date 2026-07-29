@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 
 <html lang="ja">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>記録の森</title>
+<title></title>
 
 <link href="style.css" rel="stylesheet"/></head>
 <body data-theme="day">
@@ -20,17 +19,20 @@
 <button class="theme-button" data-theme-value="evening" type="button">夕方の森</button>
 <button class="theme-button" data-theme-value="night" type="button">夜の森</button>
 </nav>
-<a class="release-link" href="#" onclick="alert('投稿ページは次の段階で作成します'); return false;">森に放す</a>
+
 </header>
 <section aria-label="森を流れる生き物の投稿" class="forest-stream" id="forestStream"></section>
 <section class="intro">
 <small>MEET A CREATURE BY CHANCE</small>
 <h1>記録の森</h1>
 <p>
-        誰かが森に放した一枚と、偶然に出会う場所。<br/>
-        背後に流れていく気配を追いかけましょう。
+        誰かがこの森に放した一枚と出会えます。<br/>
+        流れていく気配を追いかけましょう。
       </p>
-<button class="encounter-button" id="encounterButton">生き物と出会う</button>
+<div class="intro-actions">
+<button class="encounter-button" id="encounterButton" type="button">生き物と出会う</button>
+<button class="encounter-button release-button" id="releaseButton" type="button">森へ放す</button>
+</div>
 </section>
 <div class="footer-note">
       この森は、みんなの投稿によって少しずつ育っていきます。
@@ -52,6 +54,50 @@
 <p class="detail-comment" id="comment"></p>
 </div>
 </div>
+</aside>
+
+<!-- 「森へ放す」を押したときに手前へ表示される仮の投稿画面 -->
+<aside aria-hidden="true" class="release-modal" id="releaseModal">
+  <div aria-labelledby="releaseTitle" aria-modal="true" class="release-panel" role="dialog">
+    <button aria-label="投稿画面を閉じる" class="close-button release-close-button" id="releaseCloseButton" type="button">×</button>
+    <div class="detail-kicker">RELEASE A RECORD INTO THE FOREST</div>
+    <h2 id="releaseTitle">森へ放す</h2>
+    <p class="release-lead">見つけた生き物の記録を、この森へ放します。</p>
+
+    <form class="release-form" id="releaseForm">
+      <label class="release-field release-image-field">
+        <span>写真</span>
+        <input accept="image/*" id="releaseImage" name="image" type="file" />
+        <span class="release-image-preview" id="releaseImagePreview">写真を選択</span>
+      </label>
+
+      <label class="release-field">
+        <span>生き物の名前</span>
+        <input id="releaseName" name="name" placeholder="わからない場合は「不明」でも可" type="text" />
+      </label>
+
+      <label class="release-field">
+        <span>見つけた場所</span>
+        <input id="releaseLocation" name="location" placeholder="例：B区画の木の近く" type="text" />
+      </label>
+
+      <label class="release-field">
+        <span>見つけた日</span>
+        <input id="releaseDate" name="date" type="date" />
+      </label>
+
+      <label class="release-field release-field-wide">
+        <span>ひとこと</span>
+        <textarea id="releaseComment" name="comment" placeholder="どんな様子だったか、短く記録できます。" rows="4"></textarea>
+      </label>
+
+      <div class="release-form-actions">
+        <button class="release-cancel-button" id="releaseCancelButton" type="button">戻る</button>
+        <button class="release-submit-button" type="submit">この森へ放す</button>
+      </div>
+      <p aria-live="polite" class="release-message" id="releaseMessage"></p>
+    </form>
+  </div>
 </aside>
 
 <script defer="" src="script.js"></script></body>
