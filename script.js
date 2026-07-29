@@ -73,7 +73,7 @@ function makeEmptyCard() {
 
   const circle = document.createElement("div");
   circle.className = "empty-circle";
-  circle.textContent = "まだ、森に気配はありません";
+  circle.textContent = "";
 
   const spacer = document.createElement("span");
   spacer.className = "bird-card-label";
