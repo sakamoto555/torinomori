@@ -34,7 +34,7 @@ const creatures = [
   }
 ];
 
-const stream = document.getElementById("forestStream");
+const stream = document.getElementById("inquily");
 const detail = document.getElementById("detail");
 const encounterButton = document.getElementById("encounterButton");
 const releaceButton = document.getElementById("releaceButton");
